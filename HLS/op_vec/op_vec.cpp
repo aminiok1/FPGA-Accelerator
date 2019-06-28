@@ -1,37 +1,122 @@
 #include "op_vec.h"
 
+void op_vec_kernel(
 
-void op_vec_kernel(AXI_VAL p_times_z_u[N], float q[10], AXI_VAL result[N])
+		//Inputs
+		in_data_t in_1_bram_z[N],
+		AXI_VAL in_1_mac[N],
+
+		AXI_VAL in_2_feedback[N],
+		in_data_t in_2_bram_u[N],
+		in_data_t in_2_bram_q[N],
+
+		// Output
+		AXI_VAL result_mac[N],
+		AXI_VAL result_st[N],
+		AXI_VAL result_feedback[N],
+
+		out_data_t x[N],
+
+		// Input signals
+		volatile int1 &op_sel,
+		volatile int1 &in1_sel,
+		volatile int2 &in2_sel,
+
+		volatile int1 &scale,
+		volatile data_t &alpha
+		)
+
 {
+	// Pragmas for input/output interface types
+	#pragma HLS INTERFACE axis register both port=result_feedback
+	#pragma HLS INTERFACE axis register both port=result_st
+	#pragma HLS INTERFACE axis register both port=result_mac
 
-	#pragma HLS INTERFACE bram port=q
-	#pragma HLS interface axis port=p_times_z_u
-	#pragma HLS interface axis port=result
-	#pragma HLS interface s_axilite port=return bundle=CTRL_BUS
+	#pragma HLS INTERFACE bram port=x
 
-	float in[N];
-	float acc[N];
-	float data_cache[N];
+	#pragma HLS INTERFACE axis port=in_1_mac
+	#pragma HLS INTERFACE bram port=in_1_bram_z
 
-	Reset: for (int iacc = 0; iacc < N; iacc++)
-	#pragma HLS UNROLL
-		acc[iacc] = 0;
-
-	In: for (int i = 0; i < N; i++)
-				in[i] = pop_stream<float, 4, 5, 5>(p_times_z_u[i]);
-
-	float temp[N];
-	for (int iwtf = 0; iwtf < 10; iwtf++)
-		temp[iwtf] = q[iwtf];
+	#pragma HLS interface bram port=in_2_bram_u
+	#pragma HLS interface bram port=in_2_bram_q
+	#pragma HLS interface axis port=in_2_feedback
 
 
-	for (int iadd = 0; iadd < 10; iadd++){
-	//	#pragma HLS PIPELINE
-		acc[iadd] = in[iadd] + temp[iadd];
+	volatile data_t one_alpha = 1 - alpha;
+
+	int1 zero = 0;
+	int2 zero_2 = 0;
+	int1 one = 1;
+	int2 one_2 = 1;
+	int2 two = 2;
+
+	// Registering the inputs (for some reasons hls throws data dependency warnings if inputs are directly used)
+	int1 op_sel_t = op_sel;
+	int1 scale_t = scale;
+	int1 in1_sel_t = in1_sel;
+	int2 in2_sel_t = in2_sel;
+
+
+	// Intermediate variables
+	data_t acc;
+	data_t op_1;
+	data_t op_2;
+
+
+	Compute: for (int iadd = 0; iadd < N; iadd++)
+	{
+		// input 1 selector
+		if (in1_sel_t == zero)
+		{
+			op_1 = in_1_bram_z[iadd];
+		}
+
+		else if (in1_sel_t == one)
+		{
+			op_1 = pop_stream<float, 1, 1, 1>(in_1_mac[iadd]);
+		}
+
+		// input 2 selector
+		if (in2_sel_t == zero_2)
+		{
+			op_2 = pop_stream<float, 1, 1, 1>(in_2_feedback[iadd]);
+		}
+
+		else if (in2_sel_t == one_2)
+		{
+			op_2 = in_2_bram_u[iadd];
+		}
+
+		else if (in2_sel_t == two)
+		{
+			op_2 = in_2_bram_q[iadd];
+		}
+
+		// Main computation
+		// op_sel:
+		//		0 --> add
+		//		1 --> subtract
+		if (op_sel_t == zero)
+		{
+			if (scale_t == one)
+				{
+					acc= (one_alpha * op_1) + (alpha * op_2);
+					result_st[iadd] = push_stream<data_t, 1, 1, 1>(acc, iadd == (N - 1));
+				}
+			else
+				{
+					acc = op_1 + op_2;
+					x[iadd] = acc;
+					result_feedback[iadd] = push_stream<data_t, 1, 1, 1>(acc, iadd == (N - 1));
+				}
+		}
+
+		else if (op_sel_t == one)
+			{
+				acc = op_1 - op_2;
+				result_mac[iadd] = push_stream<data_t, 1, 1, 1>(acc, iadd == (N - 1));
+			}
 	}
 
-	Out: for (int iout = 0; iout < N; iout++)
-		result[iout] = push_stream<float, 4, 5, 5>(acc[iout], iout == (N - 1));
-
-//	return;
+	return;
 }

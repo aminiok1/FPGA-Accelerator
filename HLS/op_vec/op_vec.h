@@ -1,54 +1,83 @@
+#ifndef OP_VEC_H_
+#define OP_VEC_H_
+
 #include <ap_axi_sdata.h>
+#include <ap_int.h>
 
 // configurable params
 
-#define N		10
+#define N		16
 
-typedef float data_in_t;
-typedef float data_out_t;
+typedef float 	in_data_t;
+typedef float 	out_data_t;
+typedef float 	data_t;
 
-typedef ap_axiu<32, 4, 5, 5> AXI_VAL;
+typedef ap_int<1> 	int1;
+typedef ap_int<2> 	int2;
+
+typedef ap_axis<32, 1, 1, 1> AXI_VAL;
 
 // function prototype
 void op_vec_kernel(
-		AXI_VAL p_times_z_u[N],
-		float q[10],
-		AXI_VAL result[N]);
+
+		//Inputs
+		in_data_t in_1_bram_z[N],
+		AXI_VAL in_1_mac[N],
+
+		AXI_VAL in_2_feedback[N],
+		in_data_t in_2_bram_u[N],
+		in_data_t in_2_bram_q[N],
+
+		// Output
+		AXI_VAL result_mac[N],
+		AXI_VAL result_st[N],
+		AXI_VAL result_feedback[N],
+		out_data_t x[N],
+
+		// Input signals
+		volatile int1 &op_sel,
+		volatile int1 &in1_sel,
+		volatile int2 &in2_sel,
+
+		volatile int1 &scale,
+		volatile data_t &alpha
+		);
+
 
 template<typename T, int U, int TI, int TD>
-T pop_stream(ap_axiu <sizeof(T) * 8, U, TI, TD> const &e)
+T pop_stream(ap_axis <sizeof(T) * 8, U, TI, TD> const &e)
 {
 #pragma HLS INLINE
 
 	//assert(sizeof(T) == sizeof(double));
 	union
 	{
-		long long ival;
+		long ival;
 		T oval;
 	} converter;
 	converter.ival = e.data;
 	T ret = converter.oval;
 
 	// axi signals
-	volatile ap_uint<sizeof(T)> strb = e.strb;
-	volatile ap_uint<sizeof(T)> keep = e.keep;
-	volatile ap_uint<U> user = e.user;
-	volatile ap_uint<1> last = e.last;
-	volatile ap_uint<TI> id = e.id;
-	volatile ap_uint<TD> dest = e.dest;
+	//volatile ap_uint<sizeof(T)> strb = e.strb;
+	//volatile ap_uint<sizeof(T)> keep = e.keep;
+	//volatile ap_uint<U> user = e.user;
+	//volatile ap_uint<1> last = e.last;
+	//volatile ap_uint<TI> id = e.id;
+	//volatile ap_uint<TD> dest = e.dest;
 
 	return ret;
 }
 
 template <typename T, int U, int TI, int TD>
-ap_axiu <sizeof(T) * 8, U, TI, TD> push_stream(T const &v, bool last = false)
+ap_axis <sizeof(T) * 8, U, TI, TD> push_stream(T const &v, bool last = false)
 {
 #pragma HLS INLINE
-	ap_axiu<sizeof(T) * 8, U, TI, TD> e;
+	ap_axis<sizeof(T) * 8, U, TI, TD> e;
 
 	union
 	{
-		long long oval;
+		long oval;
 		T ival;
 	} converter;
 	converter.ival = v;
@@ -63,3 +92,4 @@ ap_axiu <sizeof(T) * 8, U, TI, TD> push_stream(T const &v, bool last = false)
 	e.dest = 0;
 	return e;
 }
+#endif

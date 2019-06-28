@@ -1,61 +1,67 @@
 #include "mac.h"
-#include <hls_stream.h>
-// example code for adding two vectors
 
-void mac_kernel(data_int_t p[N][N], data_int_t z_u[N], AXI_VAL result[N])
+// partitioning arrays P and vec_cache decreases the clock cycles by 60 and meanwhile
+// increases BRAM, LUT, and FF by  10, 1000, and 1000 respectively.
+
+// FIXME: Reading z_u and p is not concurrent rn!
+void mac_kernel (
+		in_data_t p[N][N],
+		AXI_VAL z_u[N],
+		AXI_VAL result[N]
+		)
 {
+#pragma HLS RESOURCE variable=p core=RAM_1P_BRAM
 
-	#pragma HLS interface bram port=p
-	#pragma HLS interface bram port=z_u
+
+	#pragma HLS interface axis port=z_u
 	#pragma HLS interface axis port=result
-	#pragma HLS interface s_axilite port=return bundle=CTRL_BUS
 
-	data_out_t acc[N];
-	data_out_t data_cache;
+	in_data_t vec_cache[N];
+	out_data_t res[N];
 
-	Reset: for (int iacc = 0; iacc < N; iacc++)
-	#pragma HLS UNROLL
-		acc[iacc] = 0;
+	// Read input data. Fill the internal buffer.
+	read_data (z_u, vec_cache);
 
-	I_LOOP: for (int ii = 0; ii < N; ii++) {
-		data_cache = z_u[ii];
+	// Compute the matrix vector multiplication
+	mac (p, vec_cache, res);
 
-		Product: for (int jj = 0; jj < N; jj++) {
-		#pragma HLS PIPELINE
-			acc[jj] += data_cache * p[ii][jj];
-		}
-	}
+	// Write output to axi stream
+	write_data (res, result);
 
-	Result: for (int ires = 0; ires < N; ires++)
+}
+void read_data(
+		AXI_VAL z_u[N],
+		in_data_t data_cache[N]
+		)
+{
+	Read_Vec: for (int jj = 0; jj < 16; jj++)
+				{
+					data_cache[jj] = pop_stream<data_t, 1, 1, 1>(z_u[jj]);
+				}
+}
+
+void mac(
+		in_data_t p[N][N],
+		in_data_t vec[N],
+		out_data_t res[N]
+		)
+{
+	Compute: for (int ii = 0; ii < N; ii++)
 	{
-		// i == (DIM - 1) is for indicating the last byte (TLAST signal in axi interface)
-		result[ires] = push_stream<data_out_t, 4, 5, 5>(acc[ires], ires == (N - 1));
+		data_t acc = 0;
+
+		Product: for (int jj = 0; jj < N; jj++)
+			acc += p[ii][jj] * vec[jj];
+
+		res[ii] = acc;
 	}
-
-	// Use this block if result is Bram
-	/*Result: for (int ires = 0; ires < N; ires++)
-		result[ires] = acc[ires];
-	 */
-	return;
-}
-	/*
-	 data_out_t temp;
-int k = 0;
-	 // Generate the expected result
-	 I_LOOP:  for(int i = 0; i < N; i++){
-	 //  K_LOOP:      for(int k = 0; k < N; k++) {
-
-		   #pragma HLS PIPELINE
-		   if(k==0)
-	    	   temp = 0;
-
-		   temp += z_u[k] * p[(i*N) + k];
-
-	       //if(k == (N - 1))
-	    	 //  result[i] = temp;
-	    // }
-	   result[i] = temp;}
-	return;
 }
 
-*/
+void write_data(
+		out_data_t res[N],
+		AXI_VAL res_stream[N]
+		)
+{
+	Write: for (int iout = 0; iout < N; iout++)
+		res_stream[iout] = push_stream<data_t, 1, 1, 1>(res[iout], iout == (N - 1));
+}

@@ -1,6 +1,9 @@
-#include <ap_axi_sdata.h>
+#ifndef SOFT_THRESHOLD_H_
+#define SOFT_THRESHOLD_H_
 
-// Configurable params
+#include <ap_axi_sdata.h>
+// configurable params
+
 #define N		16
 
 typedef float 	in_data_t;
@@ -9,27 +12,13 @@ typedef float 	data_t;
 
 typedef ap_axis<32, 1, 1, 1> AXI_VAL;
 
-// Functions prototypes
-void mac_kernel (
-		in_data_t p[N][N],
-		AXI_VAL z_u[N],
-		AXI_VAL result[N]
-		);
+// function prototype
+void soft_threshold_kernel(
+		in_data_t u[N],
+		AXI_VAL x[N],
 
-void read_data(
-		AXI_VAL z_u[N],
-		in_data_t data_cache[N]
-		);
-
-void mac(
-		in_data_t p[N][N],
-		in_data_t vec[N],
-		out_data_t res[N]
-		);
-
-void write_data(
-		out_data_t res[N],
-		AXI_VAL res_stream[N]
+		volatile data_t &rho_inv,
+		out_data_t result_z[N]
 		);
 
 template<typename T, int U, int TI, int TD>
@@ -80,3 +69,5 @@ ap_axis <sizeof(T) * 8, U, TI, TD> push_stream(T const &v, bool last = false)
 	e.dest = 0;
 	return e;
 }
+
+#endif
