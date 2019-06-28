@@ -31,4 +31,6 @@ platform*.*
 **/solution1
 **/webtalk
 **/.metadata
-**/.sdk
+**/*.sdk
+**/.cache
+*.xpr
