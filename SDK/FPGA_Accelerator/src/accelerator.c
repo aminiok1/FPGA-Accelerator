@@ -5,188 +5,170 @@
  *      Author: Amin
  */
 #include "accelerator.h"
-#include "xil_cache.h"
-#include "xaxidma.h"
 #include "xparameters.h"
-#include "xmac_kernel.h"
-#include "xop_vec_kernel.h"
+#include "xgpio.h"
+#include "xscugic.h"
 
-// accelerator instance
-XMac_kernel xmac_kernel;
-XOp_vec_kernel xvec_kernel;
+#define ALPHA				1
+#define RHO_INV				1
+#define INTC_INTERRUPT_ID_0 61 // IRQ_F2P[0:0]
 
-// axi dma instance
-extern XAxiDma AxiDma;
+float *res_hw = (float *) (XPAR_BRAM_2_BASEADDR);
 
-XMac_kernel_Config xmac_kernel_config = {
-		0,	//device id
-		XPAR_MAC_KERNEL_0_S_AXI_CTRL_BUS_BASEADDR //base address for the control bus (taken from xparameters.h)
-};
 
-XOp_vec_kernel_Config xvec_kernel_config = {
-		0,	//device id
-		XPAR_OP_VEC_KERNEL_0_S_AXI_CTRL_BUS_BASEADDR //base address for the control bus (taken from xparameters.h)
-};
+XGpio gpioOut, gpioIn;
 
-// interrupt handler
-XScuGic ScuGic;
+// Instance of interrupt controller
+static XScuGic intc;
 
-// for a detailed implementation of the following functions refer to xaccelerator_kernel.c file
-int XAccel_kernelSetup()
+// interrupt service routine for IRQ_F2P[0:0]
+void isr (void *intc_inst_ptr)
 {
-	int status;
-
-	// this function sets the xaccel_kernel base address and sets its state to ready for execution
-	status = XOp_vec_kernel_CfgInitialize(&xvec_kernel, &xvec_kernel_config);
-
-	if (status != XST_SUCCESS)
-	{
-		printf("Error in kernel config initialize\n");
-		return status;
-	}
-
-	status = XMac_kernel_CfgInitialize(&xmac_kernel, &xmac_kernel_config);
-
-	if (status != XST_SUCCESS)
-			printf("Error in kernel config initialize\n");
-
-	return status;
+    xil_printf("HW results\n");
+    for (int i = 0; i < ST_SIZE; i++)
+    		printf("res_hw[%d] = %.6f\n", i, res_hw[i]);
 }
 
-void XAccel_kernelStart(void *InstancePtr)
+// sets up the interrupt system and enables interrupts for IRQ_F2P[1:0]
+int setup_interrupt_system()
 {
-	XMac_kernel *pExample = (XMac_kernel *) InstancePtr;
-	XMac_kernel_InterruptEnable(pExample,1);
-	XMac_kernel_InterruptGlobalEnable(pExample);
 
-	// This function sets ap_start signal to 1 that initiates the execution of the accelerator
-	XMac_kernel_Start(pExample);
-}
+    int result;
+    XScuGic *intc_instance_ptr = &intc;
+    XScuGic_Config *intc_config;
 
-void XAccel_kernelISR(void *InstancePtr)
-{
-	XMac_kernel *pExample = (XMac_kernel *) InstancePtr;
-	//Disable GLobal Interrupts
-	XMac_kernel_InterruptGlobalDisable(pExample);
-	//Disable Local Interrupts
-	XMac_kernel_InterruptDisable(pExample, 0xffffffff);
+    // get config for interrupt controller
+    intc_config = XScuGic_LookupConfig(XPAR_PS7_SCUGIC_0_DEVICE_ID);
+    if (NULL == intc_config) {
+        return XST_FAILURE;
+    }
 
-	//Clear Interrupt
-	XMac_kernel_InterruptClear(pExample,1);
-}
+    // initialize the interrupt controller driver
+    result = XScuGic_CfgInitialize(intc_instance_ptr, intc_config, intc_config->CpuBaseAddress);
 
-int XAccel_kernelSetupInterrupt()
-{
-	int result;
-	XScuGic_Config *pCfg = XScuGic_LookupConfig(XPAR_SCUGIC_SINGLE_DEVICE_ID);
-	if(pCfg == NULL)
-	{
-		printf("Interrupt Config Look Up Failed\n");
-		return XST_FAILURE;
-	}
-	result = XScuGic_CfgInitialize(&ScuGic, pCfg, pCfg->CpuBaseAddress);
-	if(result != XST_SUCCESS)
-		return result;
+    if (result != XST_SUCCESS) {
+        return result;
+    }
 
-	//self test
-	result = XScuGic_SelfTest(&ScuGic);
-	if(result != XST_SUCCESS)
-		return result;
+    // set the priority of IRQ_F2P[0:0] to 0xA0 (highest 0xF8, lowest 0x00) and a trigger for a rising edge 0x3.
+    XScuGic_SetPriorityTriggerType(intc_instance_ptr, INTC_INTERRUPT_ID_0, 0x00, 0x3);
 
-	//Initialize Exception Handler
-	Xil_ExceptionInit();
-	//Register Exception Handler with Interrupt Service Routine
-	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_INT, (Xil_ExceptionHandler)XScuGic_InterruptHandler, &ScuGic);
-	Xil_ExceptionEnable();
-	result = XScuGic_Connect(&ScuGic, XPAR_FABRIC_MAC_KERNEL_0_INTERRUPT_INTR, (Xil_ExceptionHandler)XAccel_kernelISR, &xmac_kernel);
-	if(result != XST_SUCCESS)
-		return result;
+    // connect the interrupt service routine isr0 to the interrupt controller
+    result = XScuGic_Connect(intc_instance_ptr, INTC_INTERRUPT_ID_0, (Xil_ExceptionHandler)isr, (void *)&intc);
 
-	XScuGic_Enable(&ScuGic, XPAR_FABRIC_MAC_KERNEL_0_INTERRUPT_INTR);
-	return XST_SUCCESS;
-}
+    if (result != XST_SUCCESS) {
+        return result;
+    }
 
-int Setup_HW_Accelerator(float p[ST_SIZE][ST_SIZE], float z_u[ST_SIZE], float q[ST_SIZE], float res[ST_SIZE])
-{
-	int status = XAccel_kernelSetup();
-	if(status != XST_SUCCESS)
-	{
-		printf("Error: Accelerator Setup Failed\n");
-		return XST_FAILURE;
-	}
-	status = XAccel_kernelSetupInterrupt();
-	if(status != XST_SUCCESS)
-	{
-		printf("Error: Interrupt Setup Failed\n");
-		return XST_FAILURE;
-	}
-	XMac_kernel_Start(&xmac_kernel);
+    // enable interrupts for IRQ_F2P[0:0]
+    XScuGic_Enable(intc_instance_ptr, INTC_INTERRUPT_ID_0);
 
-	//Cache Flush
-	Xil_DCacheFlushRange((unsigned int)p, sizeof(double)*ST_SIZE*ST_SIZE);
-	Xil_DCacheFlushRange((unsigned int)z_u, sizeof(double)*ST_SIZE);
-	Xil_DCacheFlushRange((unsigned int)res, sizeof(double)*ST_SIZE);
 
-	printf("Cache Cleared\n");
+    // initialize the exception table and register the interrupt controller handler with the exception table
+    Xil_ExceptionInit();
 
-	return 0;
+    Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_INT, (Xil_ExceptionHandler)XScuGic_InterruptHandler, intc_instance_ptr);
+
+    // enable non-critical exceptions
+    Xil_ExceptionEnable();
+
+    return XST_SUCCESS;
 }
 
 int Start_HW_Accelerator(void)
 {
-	int status = XAccel_kernelSetup();
+
+	int status;
+
+	//initialize axi gpio
+	status = init_gpio();
+	XGpio_DiscreteWrite(&gpioOut, 1, 0x00);
+
+	//setup interrupt
+	status = setup_interrupt_system();
 	if(status != XST_SUCCESS)
 	{
 		printf("Error: Accelerator Setup Failed\n");
 		return XST_FAILURE;
 	}
-	status = XAccel_kernelSetupInterrupt();
-	if(status != XST_SUCCESS)
-	{
-		printf("Error: Interrupt Setup Failed\n");
+
+	// start the execution
+	XGpio_DiscreteWrite(&gpioOut, 1, 0xFF);
+	printf("read = %d\n", 	XGpio_DiscreteRead(&gpioIn, 1));
+	printf("read = %d\n", 	XGpio_DiscreteRead(&gpioIn, 1));
+	printf("read = %d\n", 	XGpio_DiscreteRead(&gpioIn, 1));
+
+
+	while(1);
+
+	return XST_SUCCESS;
+}
+
+int init_gpio()
+{
+	int status = XGpio_Initialize(&gpioOut, XPAR_GPIO_0_DEVICE_ID);
+	status = XGpio_Initialize(&gpioIn, XPAR_GPIO_1_DEVICE_ID);
+
+	if (status != XST_SUCCESS) {
+		print("Error:GPIO Initialization Failed\n");
 		return XST_FAILURE;
 	}
 
-	XMac_kernel_Start(&xmac_kernel);
-
-	XOp_vec_kernel_Start(&xvec_kernel);
+	//set direction as output
+	XGpio_SetDataDirection(&gpioOut, 1, 0x00);
+	XGpio_SetDataDirection(&gpioIn, 1, 0xFF);
 
 	return XST_SUCCESS;
 }
 
-int Run_HW_Accelerator(float res[ST_SIZE])
+void accelerator_ref(float p[ST_SIZE][ST_SIZE], float q[ST_SIZE], float res[ST_SIZE])
 {
-	int status;
+	int i;
+	int irow, icol;
+	float z[ST_SIZE] = {0};
+	float u[ST_SIZE] = {0};
+	float x[ST_SIZE], x_hat[ST_SIZE], z_u[ST_SIZE], p_z_u[ST_SIZE];
 
-	// Wait for MAC kernel
-	while (!XMac_kernel_IsDone(&xmac_kernel));
-
-	// wait for add kernel and get the results from axi dma
-	status = XAxiDma_SimpleTransfer(&AxiDma, (unsigned int) res, sizeof(float)*ST_SIZE, XAXIDMA_DEVICE_TO_DMA);
-
-	if(status != XST_SUCCESS)
+	for (i = 0; i < 6; i++)
 	{
-		printf("Error: Receiving C from the Accelerator");
+
+		for (irow = 0; irow < ST_SIZE; irow++)
+			z_u[irow] = z[irow] - u[irow];
+
+		for (irow = 0; irow < ST_SIZE; irow++)
+		{
+			float tmp = 0;
+			for (icol = 0; icol < ST_SIZE; icol++)
+				tmp += p[irow][icol] * z_u[icol];
+			p_z_u[irow] = tmp;
+		}
+
+		for (irow = 0; irow < ST_SIZE; irow++)
+			x[irow] = p_z_u[irow] + q[irow];
+
+		for (irow = 0; irow < ST_SIZE; irow++)
+			x_hat[irow] = (ALPHA * x[irow]) + ((1 - ALPHA) * z[irow]);
+
+		for (irow = 0; irow < ST_SIZE; irow++)
+		{
+			float tmp1 = x_hat[irow] + u[irow] - RHO_INV;
+			float tmp2 = -1 * x_hat[irow] - u[irow] - RHO_INV;
+
+			tmp1 = (tmp1 > 0) ? tmp1:0;
+			tmp2 = (tmp2 > 0) ? tmp2:0;
+
+			z[irow] = tmp1 - tmp2;
+		}
+
+		for (irow = 0; irow < ST_SIZE; irow++)
+			u[irow] = u[irow] + x_hat[irow] - z[irow];
 	}
 
-	//Poll DMA engine to ensure transfers are complete.
-	while (XAxiDma_Busy(&AxiDma, XAXIDMA_DEVICE_TO_DMA));
+	for (irow = 0; irow < ST_SIZE; irow++)
+		res[irow] = x[irow];
 
-	printf("waiting for vec op\n");
-	while (!XOp_vec_kernel_IsDone(&xvec_kernel));
-	printf("vec op finished\n");
+	printf("SW results:\n");
+	for (irow = 0; irow < ST_SIZE; irow++)
+		printf("res_sw[%d] = %.6f\n", irow, res[irow]);
 
-	return XST_SUCCESS;
-
-}
-
-void accelerator_ref(float p[ST_SIZE][ST_SIZE], float z_u[ST_SIZE], float q[ST_SIZE], float res[ST_SIZE])
-{
-	int i, j;
-	for (i = 0; i < ST_SIZE; ++i)
-		for (j = 0; j < ST_SIZE; ++j)
-			res[i] += p[i][j] * z_u[j];
-
-	for (i = 0; i < ST_SIZE; ++i)
-		res[i] += q[i];
 }

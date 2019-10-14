@@ -45,29 +45,19 @@ int main(void)
 
 	in_data_t z_u_sw[N];
 	in_data_t z_u_hw[N];
-	AXI_VAL z_u_hw_stream[N];
 
 	out_data_t res_sw[N];
 	out_data_t res_hw[N];
-	AXI_VAL res_hw_stream[N];
 
 	// Initialize Software and HW Arrays
 	init_arrays(p_sw, z_u_sw);
 	init_arrays(p_hw, z_u_hw);
 
-	// Push z_u to the axi stream
-	for (int i = 0; i < N; i++)
-		z_u_hw_stream[i] = push_stream<data_t, 1, 1, 1>(z_u_hw[i], i == (N-1));
-
 	// Call Software Accelerator
 	accelerator_sw(p_sw, z_u_sw, res_sw);
 
 	// Call Wrapped accelerator
-	mac_kernel(p_hw, z_u_hw_stream, res_hw_stream);
-
-	// Pop the results
-	for (int i = 0; i < N; i++)
-		res_hw[i] = pop_stream<data_t, 1, 1, 1>(res_hw_stream[i]);
+	mac_kernel(p_hw, z_u_hw, res_hw);
 
 	// Compare Results of Add
 	for (i = 0; i < N; ++i)

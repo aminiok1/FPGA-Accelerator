@@ -21,18 +21,19 @@ typedef ap_axis<32, 1, 1, 1> AXI_VAL;
 void op_vec_kernel(
 
 		//Inputs
+		in_data_t in_1_mac[N],
 		in_data_t in_1_bram_z[N],
-		AXI_VAL in_1_mac[N],
 
-		AXI_VAL in_2_feedback[N],
+		in_data_t in_2_feedback[N],
 		in_data_t in_2_bram_u[N],
 		in_data_t in_2_bram_q[N],
 
 		// Output
-		AXI_VAL result_mac[N],
-		AXI_VAL result_st[N],
-		AXI_VAL result_feedback[N],
-		out_data_t x[N],
+		//AXI_VAL result_mac[N],
+		out_data_t result_mac[N],
+		out_data_t result_st[N],
+		out_data_t result_feedback[N],
+//		out_data_t x[N],
 
 		// Input signals
 		volatile int1 &op_sel,

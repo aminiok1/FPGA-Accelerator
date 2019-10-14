@@ -3,19 +3,20 @@
 void op_vec_kernel(
 
 		//Inputs
+		in_data_t in_1_mac[N],
 		in_data_t in_1_bram_z[N],
-		AXI_VAL in_1_mac[N],
 
-		AXI_VAL in_2_feedback[N],
+		in_data_t in_2_feedback[N],
 		in_data_t in_2_bram_u[N],
 		in_data_t in_2_bram_q[N],
 
 		// Output
-		AXI_VAL result_mac[N],
-		AXI_VAL result_st[N],
-		AXI_VAL result_feedback[N],
+		//AXI_VAL result_mac[N],
+		out_data_t result_mac[N],
+		out_data_t result_st[N],
+		out_data_t result_feedback[N],
 
-		out_data_t x[N],
+	//	out_data_t x[N],
 
 		// Input signals
 		volatile int1 &op_sel,
@@ -27,20 +28,18 @@ void op_vec_kernel(
 		)
 
 {
+	#pragma HLS INTERFACE ap_fifo port=in_2_feedback
+	#pragma HLS INTERFACE ap_fifo port=result_feedback
+	#pragma HLS INTERFACE ap_fifo port=in_1_mac
+
+	#pragma HLS INTERFACE ap_fifo port=result_st
+	#pragma HLS INTERFACE ap_fifo port=result_mac
 	// Pragmas for input/output interface types
-	#pragma HLS INTERFACE axis register both port=result_feedback
-	#pragma HLS INTERFACE axis register both port=result_st
-	#pragma HLS INTERFACE axis register both port=result_mac
 
-	#pragma HLS INTERFACE bram port=x
-
-	#pragma HLS INTERFACE axis port=in_1_mac
+//	#pragma HLS INTERFACE bram port=x
 	#pragma HLS INTERFACE bram port=in_1_bram_z
-
 	#pragma HLS interface bram port=in_2_bram_u
 	#pragma HLS interface bram port=in_2_bram_q
-	#pragma HLS interface axis port=in_2_feedback
-
 
 	volatile data_t one_alpha = 1 - alpha;
 
@@ -63,7 +62,7 @@ void op_vec_kernel(
 	data_t op_2;
 
 
-	Compute: for (int iadd = 0; iadd < N; iadd++)
+	Compute: for (int iadd = 0; iadd < 16; iadd++)
 	{
 		// input 1 selector
 		if (in1_sel_t == zero)
@@ -73,13 +72,13 @@ void op_vec_kernel(
 
 		else if (in1_sel_t == one)
 		{
-			op_1 = pop_stream<float, 1, 1, 1>(in_1_mac[iadd]);
+			op_1 = in_1_mac[iadd]; //pop_stream<float, 1, 1, 1>(in_1_mac[iadd]);
 		}
 
 		// input 2 selector
 		if (in2_sel_t == zero_2)
 		{
-			op_2 = pop_stream<float, 1, 1, 1>(in_2_feedback[iadd]);
+			op_2 = in_2_feedback[iadd]; //pop_stream<float, 1, 1, 1>(in_2_feedback[iadd]);
 		}
 
 		else if (in2_sel_t == one_2)
@@ -101,20 +100,20 @@ void op_vec_kernel(
 			if (scale_t == one)
 				{
 					acc= (one_alpha * op_1) + (alpha * op_2);
-					result_st[iadd] = push_stream<data_t, 1, 1, 1>(acc, iadd == (N - 1));
+					result_st[iadd] = acc; //push_stream<data_t, 1, 1, 1>(acc, iadd == (N - 1));
 				}
 			else
 				{
 					acc = op_1 + op_2;
-					x[iadd] = acc;
-					result_feedback[iadd] = push_stream<data_t, 1, 1, 1>(acc, iadd == (N - 1));
+				//	x[iadd] = acc;
+					result_feedback[iadd] = acc; //push_stream<data_t, 1, 1, 1>(acc, iadd == (N - 1));
 				}
 		}
 
 		else if (op_sel_t == one)
 			{
 				acc = op_1 - op_2;
-				result_mac[iadd] = push_stream<data_t, 1, 1, 1>(acc, iadd == (N - 1));
+				result_mac[iadd] = acc; //push_stream<data_t, 1, 1, 1>(acc, iadd == (N - 1));
 			}
 	}
 

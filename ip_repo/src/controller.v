@@ -151,8 +151,8 @@
     localparam ADD  =   1'd0,
                SUB  =   1'd1;
                
-    assign alpha = 'd1;
-    assign rho_inv = 'd1;
+    assign alpha = 32'h3F800000;
+    assign rho_inv = 32'h3F800000;
     
     always @(*) begin
     
@@ -176,8 +176,7 @@
             
                 c_done = 1'b0;
                 if (start == 1'b1) begin
-                    //c_state = Z_U;
-                    c_state = DONE;
+                    c_state = Z_U;
                 end                
             end
             
@@ -192,7 +191,7 @@
                 c_counter = 'd0;
                 
                 c_state = Z_U_WAIT_1;
-                
+                               
             end
             
             Z_U_WAIT_1: begin
@@ -211,8 +210,8 @@
             Z_U_WAIT_2: begin   
                
                 if (op_vec_done == 1'b1) begin 
-                    //c_state = MAC;
-                    c_state = DONE;
+                      c_state = MAC;
+                 //   c_state = DONE;
                  end
                  
             end
@@ -350,11 +349,11 @@
             
             DONE: begin
                 
-                c_done = 1'b1;
+                c_done = 1'b0;
                 //c_state = IDLE;
-                 //if (start == 1'b0) begin
-                    c_state = IDLE;
-                //end    
+        //         if (start == 1'b0) begin
+         //           c_state = IDLE;
+          //      end    
                 
             end
             

@@ -12,12 +12,12 @@ typedef ap_axis<32, 1, 1, 1> AXI_VAL;
 // Functions prototypes
 void mac_kernel (
 		in_data_t p[N][N],
-		AXI_VAL z_u[N],
-		AXI_VAL result[N]
+		in_data_t z_u[N],
+		out_data_t result[N]
 		);
 
 void read_data(
-		AXI_VAL z_u[N],
+		in_data_t z_u[N],
 		in_data_t data_cache[N]
 		);
 
@@ -29,7 +29,7 @@ void mac(
 
 void write_data(
 		out_data_t res[N],
-		AXI_VAL res_stream[N]
+		out_data_t res_stream[N]
 		);
 
 template<typename T, int U, int TI, int TD>

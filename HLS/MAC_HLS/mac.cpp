@@ -6,15 +6,13 @@
 // FIXME: Reading z_u and p is not concurrent rn!
 void mac_kernel (
 		in_data_t p[N][N],
-		AXI_VAL z_u[N],
-		AXI_VAL result[N]
+		in_data_t z_u[N],
+		out_data_t result[N]
 		)
 {
-#pragma HLS RESOURCE variable=p core=RAM_1P_BRAM
-
-
-	#pragma HLS interface axis port=z_u
-	#pragma HLS interface axis port=result
+	#pragma HLS INTERFACE ap_fifo port=result
+	#pragma HLS INTERFACE ap_fifo port=z_u
+	#pragma HLS RESOURCE variable=p core=RAM_1P_BRAM
 
 	in_data_t vec_cache[N];
 	out_data_t res[N];
@@ -30,13 +28,13 @@ void mac_kernel (
 
 }
 void read_data(
-		AXI_VAL z_u[N],
+		in_data_t z_u[N],
 		in_data_t data_cache[N]
 		)
 {
 	Read_Vec: for (int jj = 0; jj < 16; jj++)
 				{
-					data_cache[jj] = pop_stream<data_t, 1, 1, 1>(z_u[jj]);
+					data_cache[jj] = z_u[jj]; //pop_stream<data_t, 1, 1, 1>(z_u[jj]);
 				}
 }
 
@@ -59,9 +57,9 @@ void mac(
 
 void write_data(
 		out_data_t res[N],
-		AXI_VAL res_stream[N]
+		out_data_t res_stream[N]
 		)
 {
 	Write: for (int iout = 0; iout < N; iout++)
-		res_stream[iout] = push_stream<data_t, 1, 1, 1>(res[iout], iout == (N - 1));
+		res_stream[iout] = res[iout]; //push_stream<data_t, 1, 1, 1>(res[iout], iout == (N - 1));
 }
