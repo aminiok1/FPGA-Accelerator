@@ -20,14 +20,21 @@ typedef float 	data_t;
 typedef ap_axis<32, 1, 1, 1> AXI_VAL;
 
 // function prototype
+
 void soft_threshold_kernel(
 		in_data_t x[N],
 		in_data_t u_bram[16],
 
 		volatile data_t &rho_inv,
-		out_data_t result_z[N]
-		);
+		out_data_t result_z[N],
 
+		//fifos for termination detector
+		out_data_t x_td[N],
+		out_data_t z_td[N],
+		out_data_t u_td[N],
+		out_data_t z_old_td[N]
+		);
+		
 template<typename T, int U, int TI, int TD>
 T pop_stream(ap_axis <sizeof(T) * 8, U, TI, TD> const &e)
 {

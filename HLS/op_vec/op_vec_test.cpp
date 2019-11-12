@@ -82,12 +82,12 @@ int main(void)
 	accelerator_sw(op_1, op_2, res_sw, op_sel_sw, scale_sw, alpha_sw);
 
 	// Call Wrapped accelerator
-	op_vec_kernel(op_1, op_stream, op_stream, op_2, op_2, res_stream, res_stream, res_stream, res_hw, op_sel, in1_sel, in2_sel, scale, alpha);
-
+	
+	op_vec_kernel(op_1, op_1, op_2, op_2, op_2, res_hw, res_hw, res_hw, op_sel, in1_sel, in2_sel, scale, alpha);
 
 	// Pop the results
-	for (int i = 0; i < N; i++)
-		res_hw[i] = pop_stream<data_t, 1, 1, 1>(res_stream[i]);
+	//for (int i = 0; i < N; i++)
+	//	res_hw[i] = pop_stream<data_t, 1, 1, 1>(res_stream[i]);
 
 	// Compare Results of Add
 	for (i = 0; i < N; ++i)
