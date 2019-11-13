@@ -58,7 +58,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>42b47350</spirit:value>
+            <spirit:value>7d572c39</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -74,7 +74,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>42b47350</spirit:value>
+            <spirit:value>7d572c39</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -88,7 +88,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>f64a5dae</spirit:value>
+            <spirit:value>492dd3ea</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -161,6 +161,19 @@
       </spirit:port>
       <spirit:port>
         <spirit:name>st_done</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_anylanguagesynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>terminate</spirit:name>
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
           <spirit:wireTypeDefs>
@@ -259,6 +272,23 @@
         </spirit:wire>
       </spirit:port>
       <spirit:port>
+        <spirit:name>rho</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long">31</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>wire</spirit:typeName>
+              <spirit:viewNameRef>xilinx_anylanguagesynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
         <spirit:name>in_2_sel</spirit:name>
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
@@ -279,6 +309,23 @@
         <spirit:name>op_vec_start</spirit:name>
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>reg</spirit:typeName>
+              <spirit:viewNameRef>xilinx_anylanguagesynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>st_ctr</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long">15</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>reg</spirit:typeName>
@@ -314,22 +361,44 @@
           </spirit:wireTypeDefs>
         </spirit:wire>
       </spirit:port>
+      <spirit:port>
+        <spirit:name>td_start</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>reg</spirit:typeName>
+              <spirit:viewNameRef>xilinx_anylanguagesynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_anylanguagebehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
     </spirit:ports>
+    <spirit:modelParameters>
+      <spirit:modelParameter xsi:type="spirit:nameValueTypeType" spirit:dataType="integer">
+        <spirit:name>ITERATION_COUNT</spirit:name>
+        <spirit:displayName>Iteration Count</spirit:displayName>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.ITERATION_COUNT">100</spirit:value>
+      </spirit:modelParameter>
+    </spirit:modelParameters>
   </spirit:model>
   <spirit:fileSets>
     <spirit:fileSet>
       <spirit:name>xilinx_anylanguagesynthesis_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>../../../../Research/Vision/FPGA-Accelerator/ip_repo/src/controller.v</spirit:name>
+        <spirit:name>src/controller.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_42b47350</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_7d572c39</spirit:userFileType>
+        <spirit:userFileType>IMPORTED_FILE</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
       <spirit:name>xilinx_anylanguagebehavioralsimulation_view_fileset</spirit:name>
       <spirit:file>
-        <spirit:name>../../../../Research/Vision/FPGA-Accelerator/ip_repo/src/controller.v</spirit:name>
+        <spirit:name>src/controller.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
+        <spirit:userFileType>IMPORTED_FILE</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -337,7 +406,7 @@
       <spirit:file>
         <spirit:name>xgui/controller_v1_0.tcl</spirit:name>
         <spirit:fileType>tclSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_f64a5dae</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_492dd3ea</spirit:userFileType>
         <spirit:userFileType>XGUI_VERSION_2</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
@@ -347,6 +416,11 @@
     <spirit:parameter>
       <spirit:name>Component_Name</spirit:name>
       <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.Component_Name" spirit:order="1">controller_v1_0</spirit:value>
+    </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>ITERATION_COUNT</spirit:name>
+      <spirit:displayName>Iteration Count</spirit:displayName>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.ITERATION_COUNT">100</spirit:value>
     </spirit:parameter>
   </spirit:parameters>
   <spirit:vendorExtensions>
@@ -362,41 +436,259 @@
       </xilinx:taxonomies>
       <xilinx:displayName>controller_v1_0</xilinx:displayName>
       <xilinx:definitionSource>package_project</xilinx:definitionSource>
-      <xilinx:coreRevision>4</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2019-07-20T00:54:29Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>23</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2019-08-06T01:39:35Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@30175ec4_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@469a20bd_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@31254766_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@19d52ebb_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@5587d87b_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@1e60f720_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@b93ec28_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@1e31fa47_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@2675bccb_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@6b3dca5_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@704794e6_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@1fdcef0c_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@457853a0_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@4086ad5b_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@41ab0db6_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@2955219c_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@65a2903a_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@24d40689_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@401fe73_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@3b0596a7_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@49c9acdb_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@40249984_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@2d32ccc6_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
-        <xilinx:tag xilinx:name="ui.data.coregen.dd@6d12ddf4_ARCHIVE_LOCATION">d:/research/vision/fpga-accelerator/ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1ecd8515_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3a8e7ecb_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@73cf0d68_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1d77d3e6_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6a2832af_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2fb101c3_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5a7cac9d_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@52ad81a1_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2b320f6e_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@423dfe72_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@346d058d_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@11c328cf_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2ad070c5_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@108128f8_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1c41d7ce_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2d219ff4_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@47ec6cd9_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@212ffd03_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2d98652f_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@e76ea12_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6d832803_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@66e283e9_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@b61364a_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@27ad55d6_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@783760e3_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@15b914bb_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@68ef63be_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2738d89c_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@666d649b_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@550a49ba_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@22282054_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@250a7c2c_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3ef8ee00_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@29f2f28a_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@184b9684_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6bb865a6_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3de6860c_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@40d87857_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4d34380_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@23682251_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@387ece02_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@79581e94_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7466ae78_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5b87a8bc_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4149f1a9_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@671a2a79_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@47ca0ea7_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5e2e1e3b_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1ed8376_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1fad8022_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6545d548_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@17ae33e7_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@12507ad3_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@e4b52b8_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@75d2b8e5_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@fb331ff_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@8370292_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3f65c099_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@23e640f1_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4de8de14_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7ff7f9c0_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@26ad4dc9_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@51361f15_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@67038dbb_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7d5ff2cb_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@277619bc_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@71a4cdae_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@14170336_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6905e7fb_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4440a7b0_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@26604ebe_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6cc68353_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@70addf5_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@f140c0e_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@34a18a5a_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@cd92a68_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@50bb8e7a_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5248a0f2_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7ab2f161_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@ab487a6_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6bfcf70f_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@30731ab2_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4e577e7b_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@78c14b35_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@639def6b_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5664dd53_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7deb5489_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@30bd0c1e_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2537fcd2_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2b691780_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2cb9dd7e_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@27ae3623_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1ce7d8df_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@267b4be4_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@c11051a_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@421b288_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@17703467_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3878db72_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1f3edf5d_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6f89ca32_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@72ade471_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@74685ed1_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4a58aecc_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4375fa52_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1a7e14f3_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6ff41733_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4b30ddb6_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5094c70c_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@24dee231_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5f278582_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@243361f6_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4ee74fe9_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@39fd0d8b_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@709c881d_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@56ee41d5_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@682f7055_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7c9ad8f3_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7abe4dd9_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@70a0f296_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6a3f1367_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5bd3a652_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@550707ef_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@123640a7_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@129d86e8_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2765eb93_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@17364e1f_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2b25ad23_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@56a0c3b8_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1941d45_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@d54d37_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4157a4d8_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@60b53793_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3225c823_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2f405479_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7c965269_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5aac7ccb_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@66fe2665_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@22d317d7_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1ba4d4f9_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@61599472_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2a3c914d_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5bfc1718_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6dc1a0d8_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@56710955_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7476376f_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3be41758_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@14a07163_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6a87a1c7_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@26517e28_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@664783d9_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@41850354_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7f3dfb73_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7fc99b26_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1ed3d413_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@29e62c73_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@493ef02b_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@25c63b29_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@38404504_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6358cb2c_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3ea3397c_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3f18e588_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@780ea005_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3211dc29_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4f2efc11_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@f071f34_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@27d6435d_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@27cbb73e_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3215adab_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7153431_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@58006123_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6bf078b1_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5e8b3d95_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@21dc666c_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3d67c9d9_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@27e22ba7_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3a8da51e_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1d80b432_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@39f7fad_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1a93dbba_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@29472c99_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@ea0ea83_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@27043aae_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@574c1bcd_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@784e2464_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@259cd440_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2286f25b_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@220aa198_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5c467806_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5f3e991_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6f6fb7dc_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@48c479e2_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@67d02755_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@314b802b_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3b3cce39_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@467465be_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@436f1715_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2711fe14_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3266daf9_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@56ba785_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@24725349_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6f583abf_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@14ea523d_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@47cfb07e_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@63e5305c_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3cc1bc03_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@792e7c6b_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@d6e2d71_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@774a1169_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@13ff2a8f_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@fccd88_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7eeb21f9_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@604f0cd2_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6d59fb8a_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@51a037da_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@396f5b51_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5b5c5db7_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3a2cf374_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@61d5de7f_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@ed0f73b_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7842177a_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2ad3f1b4_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@76e4f889_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4d7b6b88_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@483eabfc_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@525a1e7e_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7446f9a9_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@9826614_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3a4aef70_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7bc30cc1_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@72bd8d1d_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@59ac9f0f_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@227db7cb_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@31d321a8_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@f516aef_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1d9bd828_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4d61ba67_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@77b1d6f8_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7923cfd4_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7ea6fd01_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6d2a1919_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@52fde1f3_ARCHIVE_LOCATION">d:/Research/Vision/FPGA-Accelerator/new_ip_repo</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2018.3</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="25031715"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="6b6f1703"/>
-      <xilinx:checksum xilinx:scope="ports" xilinx:value="2b3ce437"/>
-      <xilinx:checksum xilinx:scope="parameters" xilinx:value="ff6aacc9"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="5f26bc8a"/>
+      <xilinx:checksum xilinx:scope="ports" xilinx:value="6256be3e"/>
+      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="9f83fecb"/>
+      <xilinx:checksum xilinx:scope="parameters" xilinx:value="2d72af87"/>
     </xilinx:packagingInfo>
   </spirit:vendorExtensions>
 </spirit:component>

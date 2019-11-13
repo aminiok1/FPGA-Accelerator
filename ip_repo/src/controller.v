@@ -1,15 +1,15 @@
 `timescale 1 ns / 1 ps
 
-	module controller /*#
+	module controller #
 	(
 		// Users to add parameters here
 
 		// User parameters ends
 		// Do not modify the parameters beyond this line
 
-
+        parameter ITERATION_COUNT = 100
 		// Parameters of Axi Master Bus Interface M00_AXI
-		
+	/*	
 		parameter  C_M00_AXI_START_DATA_VALUE	= 32'hAA000000,
 		parameter  C_M00_AXI_TARGET_SLAVE_BASE_ADDR	= 32'h40000000,
 		parameter integer C_M00_AXI_ADDR_WIDTH	= 32,
@@ -22,7 +22,8 @@
 		// Parameters of Axi Master Bus Interface M00_AXIS
 		parameter integer C_M00_AXIS_TDATA_WIDTH	= 32,
 		parameter integer C_M00_AXIS_START_COUNT	= 32
-	)*/
+		*/
+	)
 	(
 		// Users to add ports here
 		input wire clk,
@@ -33,6 +34,8 @@
 		input wire mac_done,
 		input wire st_done,
 		
+		input wire terminate,
+		
         output reg done,
         
         output reg scale,
@@ -40,12 +43,15 @@
         output reg in_1_sel,
         output wire [31:0] alpha,
         output wire [31:0] rho_inv,
+        output wire [31:0] rho,
+
         output reg [1:0] in_2_sel,
         output reg op_vec_start,
         
-        
+        output reg [15:0]st_ctr,
         output reg mac_start,
-        output reg st_start
+        output reg st_start,
+        output reg td_start
 		// User ports ends
 		// Do not modify the ports beyond this line
 
@@ -100,7 +106,9 @@
 
     // States for the FSM
     reg [4:0] c_state, r_state;
-    
+    reg [31:0] c_itr_ctr, r_itr_ctr;
+    reg [15:0] c_ctr, r_ctr;
+
     // Op_vec module handshake signals
     reg c_done, r_done;
     reg c_scale, r_scale;
@@ -112,12 +120,17 @@
 	// MAC unit start signal
 	reg c_mac_start, r_mac_start;
 	
+	// Termination detector start signal
+	reg c_td_start, r_td_start;
+
 	// Soft Threshold unit start signal
 	reg c_st_start, r_st_start;
 	
 	// Counter used to hold start signal high for a few cycles
 	reg [/*7*/31:0] c_counter, r_counter;
-	
+
+    reg c_td_done, r_td_done;
+    	
     // Define the states of the FSM
     localparam  IDLE            =   5'd0,   // This is the initial/idle state   
                 Z_U             =   5'd1,   // Calculates z - u and passes the result to MAC unit
@@ -153,15 +166,22 @@
                
     assign alpha = 32'h3F800000;
     assign rho_inv = 32'h3F800000;
+    assign rho = 32'h3F800000;
     
     always @(*) begin
     
         c_state = r_state;
-       
+        
+        c_itr_ctr = r_itr_ctr;
+        c_ctr = r_ctr;
+        
         c_done = r_done;
+        c_td_done = r_td_done;
+        
         c_op_vec_start = r_op_vec_start;
         c_mac_start = r_mac_start;
         c_st_start = r_st_start;
+        c_td_start = r_td_start;
         
         c_scale = r_scale;
         c_op_sel = r_op_sel;
@@ -175,8 +195,12 @@
             IDLE: begin
             
                 c_done = 1'b0;
-                if (start == 1'b1) begin
+                
+                if (start == 1'b1) begin    
+                    c_td_start = 1'b1;
                     c_state = Z_U;
+                    c_itr_ctr = r_itr_ctr + 'd1;
+                    c_ctr = r_ctr + 'd1;
                 end                
             end
             
@@ -186,11 +210,14 @@
                 c_in_2_sel = READ_BRAM_U;
                 c_op_vec_start = 1'b1;
                 
+                c_scale = 1'b0;
+                
                 c_op_sel = SUB;
                 
                 c_counter = 'd0;
                 
                 c_state = Z_U_WAIT_1;
+                c_ctr = r_ctr + 'd1;
                                
             end
             
@@ -201,8 +228,10 @@
                 end
         
                 else begin
-                    c_op_vec_start = 1'b0;
                     c_state = Z_U_WAIT_2;
+                    c_op_vec_start = 1'b0;
+                    c_ctr = r_ctr + 'd1;
+                       
                 end
                 
             end
@@ -210,8 +239,8 @@
             Z_U_WAIT_2: begin   
                
                 if (op_vec_done == 1'b1) begin 
-                      c_state = MAC;
-                 //   c_state = DONE;
+                    c_state = MAC;
+                    c_ctr = r_ctr + 'd1;
                  end
                  
             end
@@ -223,6 +252,7 @@
                 c_counter = 'd0;
                 
                 c_state = MAC_WAIT_1;
+                c_ctr = r_ctr + 'd1;
                 
             end
             
@@ -233,8 +263,9 @@
                 end
         
                 else begin
-                    c_mac_start = 1'b0;
+               //     c_mac_start = 1'b0;
                     c_state = MAC_WAIT_2;
+                    c_ctr = r_ctr + 'd1;
                 end
                 
             end
@@ -242,7 +273,9 @@
             MAC_WAIT_2: begin
                 
                 if (mac_done == 1'b1) begin 
+                    c_mac_start = 1'b0;
                     c_state = Q_ADD;
+                    c_ctr = r_ctr + 'd1;
                  end
             end
             
@@ -251,12 +284,14 @@
                 c_in_1_sel = READ_MAC;
                 c_in_2_sel = READ_BRAM_Q;
                 c_op_vec_start = 1'b1;
-                
+               
+                c_scale = 1'b0;
                 c_op_sel = ADD;
                 
                 c_counter = 'd0;
                 
                 c_state = Q_ADD_WAIT_1;
+                c_ctr = r_ctr + 'd1;
                 
             end
             Q_ADD_WAIT_1: begin
@@ -266,16 +301,18 @@
                 end
         
                 else begin
-                    c_op_vec_start = 1'b0;
                     c_state = Q_ADD_WAIT_2;
+                    c_op_vec_start = 1'b0;
+                    c_ctr = r_ctr + 'd1;
                 end
                 
             end
             
             Q_ADD_WAIT_2: begin
                 
-                if (op_vec_done == 1'b1) begin 
+                if (op_vec_done == 1'b1) begin
                     c_state = X_HAT;
+                    c_ctr = r_ctr + 'd1;
                 end
                 
             end
@@ -292,6 +329,7 @@
                 c_counter = 'd0;
                 
                 c_state = X_HAT_WAIT_1;
+                c_ctr = r_ctr + 'd1;
                 
             end
             
@@ -302,16 +340,17 @@
     
                 else begin
                     c_op_vec_start = 1'b0;
-                    c_scale = 1'b0;
                     c_state = X_HAT_WAIT_2;
+                    c_ctr = r_ctr + 'd1;
                 end
             
             end
             
             X_HAT_WAIT_2: begin
              
-                if (op_vec_done == 1'b1) begin 
+                if (op_vec_done == 1'b1) begin
                     c_state = ST;
+                    c_ctr = r_ctr + 'd1;
                 end
                 
             end
@@ -323,6 +362,7 @@
                 c_counter = 'd0;
                 
                 c_state = ST_WAIT_1;
+                c_ctr = r_ctr + 'd1;
                 
             end
             
@@ -333,8 +373,9 @@
                 end
     
                 else begin
-                    c_st_start = 1'b0;
+                   // c_st_start = 1'b0;
                     c_state = ST_WAIT_2;
+                    c_ctr = r_ctr + 'd1;
                 end
                 
             end
@@ -342,19 +383,25 @@
             ST_WAIT_2: begin
             
                 if (st_done == 1'b1) begin 
+                    c_st_start = 1'b0;
                     c_state = DONE;
+                    c_ctr = r_ctr + 'd1;
                 end
             
             end
             
             DONE: begin
-                
-                c_done = 1'b0;
-                //c_state = IDLE;
-        //         if (start == 1'b0) begin
-         //           c_state = IDLE;
-          //      end    
-                
+                 
+               if (r_itr_ctr < 32'd100 && r_td_done == 1'b0) begin
+                    c_state = IDLE;
+                    c_ctr = r_ctr + 'd1;
+               end
+               
+               else begin
+                    c_done = 1'b1;
+                    c_itr_ctr = 32'd100;    // redundant, since r_td_done stays high 
+               end
+               
             end
             
             default: begin
@@ -368,18 +415,34 @@
      end    //always
      
      always @(posedge clk) begin
+     
+        if (terminate == 1'b1)
+            r_td_done <= 1'b1;
+        else
+            r_td_done <= (rst == 1'b0) ? 'd0 : c_td_done;
+     end
+     
+     always @(posedge clk) begin
    
         // Active low reset
         r_state <= (rst == 1'b0)? 'd0 : c_state;
         
         done <= (rst == 1'b0) ? 'd0 : r_done;
         r_done <= (rst == 1'b0) ? 'd0 : c_done;
+                
+        st_ctr <= (rst == 1'b0) ? 'd0 : r_ctr;
+        r_ctr <= (rst == 1'b0) ? 'd0 : c_ctr;
+        
+        r_itr_ctr <= (rst == 1'b0) ? 'd0 : c_itr_ctr;
         
         r_op_vec_start <= (rst == 1'b0) ? 'd0 : c_op_vec_start;
         op_vec_start <= (rst == 1'b0) ? 'd0 : r_op_vec_start;
         
         r_mac_start <= (rst == 1'b0) ? 'd0 : c_mac_start;
         mac_start <= (rst == 1'b0) ? 'd0 : r_mac_start;
+       
+        r_td_start <= (rst == 1'b0) ? 'd0 : c_td_start;
+        td_start <= (rst == 1'b0) ? 'd0 : r_td_start;
         
         r_st_start <= (rst == 1'b0) ? 'd0 : c_st_start;
         st_start <= (rst == 1'b0) ? 'd0 : r_st_start;
