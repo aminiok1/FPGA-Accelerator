@@ -1,1 +1,1 @@
-# FPGA-Accelerator
+# First version of convolutional code
